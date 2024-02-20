@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
-        registry.addEndpoint("/zerodha-clone").setAllowedOriginPatterns("/*").withSockJS();
+        registry.addEndpoint("/zerodha").setAllowedOrigins("*");
     }
 
 }

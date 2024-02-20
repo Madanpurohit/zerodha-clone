@@ -29,13 +29,13 @@ public class OrderController {
     public ResponseEntity<Map<String, List<OrderDetails>>> getBuyOrderBook(){
         return ResponseEntity
                 .ok()
-                .body(orderBook.getBuyOrderBook());
+                .body(OrderBookImpl.buyOrderBook);
     }
 
     @GetMapping("/getSellOrderBook")
     public ResponseEntity<Map<String, List<OrderDetails>>> getSellOrderBook(){
         return ResponseEntity
                 .ok()
-                .body(orderBook.getSellOrderBook());
+                .body(OrderBookImpl.sellOrderBook);
     }
 }
