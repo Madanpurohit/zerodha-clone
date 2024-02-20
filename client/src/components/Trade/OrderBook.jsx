@@ -1,8 +1,29 @@
 import React from 'react';
+import {Client} from '@stomp/stompjs';
+import { useEffect, useState } from 'react';
 
-const OrderBook = () => {
+function OrderBook({ticker='BTC/USD'}){
+    const [message, setmessage] = useState("No Msg");
+    // console.log(StompJs);
+    // const stompClient = new StompJs.overWS('ws://localhost:9001/zerodha-clone')
+    useEffect(() => {
+        const client = new Client({
+            brokerURL: 'ws://localhost:9001/zerodha',
+            onConnect: () => {
+              client.publish({ destination: '/app/orderList', body: (ticker || 'BTC/USD') });
+              client.subscribe("/topic/Details",msg=>{
+                let jsonMsg = JSON.parse(msg.body);
+                console.log(jsonMsg['ticker']);
+                setmessage(msg.body);
+              })
+            },
+          });
+          
+          client.activate();
+    
+    }, [])
   return (
-    <div className="flex items-left justify-center">
+    <div className=" h-screen flex items-start justify-center">
       <div className="container mx-auto p-6 bg-white rounded-md shadow-md w-full md:w-2/3 lg:w-1/2">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">Stock Order Book</h1>
 
@@ -14,6 +35,7 @@ const OrderBook = () => {
               <tr>
                 <th className="py-2 text-left border-b bg-green-200">Price</th>
                 <th className="py-2 text-left border-b bg-green-200">Quantity</th>
+                <th className="py-2 text-left border-b bg-green-200">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -39,6 +61,7 @@ const OrderBook = () => {
               <tr>
                 <th className="py-2 text-left border-b bg-red-200">Price</th>
                 <th className="py-2 text-left border-b bg-red-200">Quantity</th>
+                <th className="py-2 text-left border-b bg-red-200">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -46,6 +69,7 @@ const OrderBook = () => {
               <tr className="transition hover:bg-red-100">
                 <td className="py-2 border-b">$121.00</td>
                 <td className="py-2 border-b">8</td>
+                <td className="py-2 border-b">100</td>
               </tr>
               <tr className="transition hover:bg-red-100">
                 <td className="py-2 border-b">$121.20</td>
