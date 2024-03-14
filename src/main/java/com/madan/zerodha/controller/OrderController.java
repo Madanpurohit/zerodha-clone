@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
@@ -17,14 +18,20 @@ import java.util.UUID;
 public class OrderController {
     @Autowired
     private OrderBookImpl orderBook;
-    @PostMapping("/place")
-    public ResponseEntity<?> palaceOrder(@RequestBody OrderDetails orderDetails){
+    @PostMapping("/place/buy")
+    public ResponseEntity<?> palaceBuyOrder(@RequestBody OrderDetails orderDetails){
         orderDetails.setOrderId(UUID.randomUUID());
         return ResponseEntity.ok()
-                .location(URI.create("/order/place"))
+                .location(URI.create("/order/place/buy"))
                 .body(orderBook.placeBuyOrder(orderDetails));
     }
-
+    @PostMapping("/place/sell")
+    public ResponseEntity<?> palaceSellOrder(@Valid @RequestBody OrderDetails orderDetails){
+        orderDetails.setOrderId(UUID.randomUUID());
+        return ResponseEntity.ok()
+                .location(URI.create("/order/place/sell"))
+                .body(orderBook.placeSellOrder(orderDetails));
+    }
     @GetMapping("/getBuyOrderBook")
     public ResponseEntity<Map<String, List<OrderDetails>>> getBuyOrderBook(){
         return ResponseEntity

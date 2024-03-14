@@ -9,5 +9,6 @@ import java.util.List;
 @Builder
 public class OrderBookWithTicker {
     private String ticker;
-    List<OrderDetails> orderBook;
+    List<OrderDetails> buyOrderBook;
+    List<OrderDetails> sellOrderBook;
 }

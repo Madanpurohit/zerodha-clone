@@ -19,11 +19,13 @@ public class WsController {
 
 //    @MessageMapping("/hello")
 //    @SendTo("/topic/greetings")
-    public void sendListUpdate(String ticker,List<OrderDetails> msg){
+    public void sendListUpdate(String ticker,List<OrderDetails> buyOrderDetails,List<OrderDetails> sellOrderDetails){
+        System.out.println("sending msg to the FE");
         OrderBookWithTicker build = OrderBookWithTicker
                 .builder()
                 .ticker(ticker)
-                .orderBook(msg)
+                .buyOrderBook(buyOrderDetails)
+                .sellOrderBook(sellOrderDetails)
                 .build();
         simpMessagingTemplate.convertAndSend("/topic/Details",build);
     }
@@ -32,6 +34,17 @@ public class WsController {
     @SendTo("/topic/Details")
     public OrderBookWithTicker sendOrderBook(@RequestBody String ticker){
         System.out.println("Received ticket"+ticker);
-        return OrderBookWithTicker.builder().ticker(ticker).orderBook(OrderBookImpl.buyOrderBook.get(ticker)).build();
+        return OrderBookWithTicker
+                .builder()
+                .ticker(ticker)
+                .buyOrderBook(OrderBookImpl.buyOrderBook.get(ticker)==null?
+                        List.of()
+                        :OrderBookImpl.buyOrderBook.get(ticker))
+                .sellOrderBook(
+                        OrderBookImpl.sellOrderBook.get(ticker)==null?
+                                List.of()
+                                :OrderBookImpl.sellOrderBook.get(ticker)
+                )
+                .build();
     }
 }

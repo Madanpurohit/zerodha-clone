@@ -49,7 +49,15 @@ public class OrderBookImpl {
         if(orderDetails.getOrderType().equalsIgnoreCase(OrderDetails.orderTypes.LIMIT.toString())){
             buyOrder(orderDetails.getTicker(),orderDetails);
         }
-        wsController.sendListUpdate(orderDetails.getTicker(),buyOrderBook.get(orderDetails.getTicker()));
+        wsController.sendListUpdate(orderDetails.getTicker(),buyOrderBook.get(orderDetails.getTicker()),sellOrderBook.get(orderDetails.getTicker()));
+        return true;
+    }
+
+    public boolean placeSellOrder(OrderDetails orderDetails){
+        if(orderDetails.getOrderType().equalsIgnoreCase(OrderDetails.orderTypes.LIMIT.toString())){
+            sellOrder(orderDetails.getTicker(),orderDetails);
+        }
+        wsController.sendListUpdate(orderDetails.getTicker(),buyOrderBook.get(orderDetails.getTicker()),sellOrderBook.get(orderDetails.getTicker()));
         return true;
     }
 
